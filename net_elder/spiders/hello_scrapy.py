@@ -1,5 +1,6 @@
 import scrapy
 
+
 class HelloScrapy(scrapy.Spider):
     name = "hello"
 
@@ -16,10 +17,10 @@ class HelloScrapy(scrapy.Spider):
         titles = response.css('a.post-title::text').getall()
         links = response.css('a.post-title::attr(href)').getall()
         # zip（）方法同时遍历两个数组
-        for title,link in zip(titles, links):
+        for title, link in zip(titles, links):
             # self.log(f'title:{title}, link:{link}')
             yield {
-                'title' :title,
-                'link':link
+                'title': title,
+                'link': link
             }
         # self.log(f'Saved file {filename}')
