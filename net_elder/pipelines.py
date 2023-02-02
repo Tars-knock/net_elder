@@ -5,9 +5,32 @@
 
 
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+from sqlalchemy.orm import Session
+
+from net_elder.items import NetElderItem
+from utils.mysqlDriver import Driver, Url
 
 
 class NetElderPipeline:
     def process_item(self, item, spider):
+        return item
+
+
+def url_convert(item: NetElderItem):
+    res = Url(
+        url=item.get('locate_url'),
+        title=item.get('title'),
+        description=item.get('description')
+    )
+
+
+class MysqlPipeline:
+    def __init__(self):
+        self.sqlSession = None
+
+    def open_spider(self, spider):
+        self.sqlSession = Driver()
+
+    def process_item(self, item, spider):
+        self.sqlSession.insert_url(url_convert(item))
         return item

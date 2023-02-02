@@ -9,4 +9,7 @@ import scrapy
 class NetElderItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    locate_url = scrapy.Field()
+    title = scrapy.Field()
+    description = scrapy.Field()
+    referer = scrapy.Field()
