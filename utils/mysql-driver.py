@@ -1,24 +1,34 @@
 import configparser
-from datetime import datetime
+import datetime
 
-from pymysql import TIMESTAMP
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import String, create_engine, select
+from sqlalchemy import TIMESTAMP
+from sqlalchemy.orm import DeclarativeBase, Session
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    type_annotation_map = {
+        datetime.datetime: TIMESTAMP(timezone=True),
+    }
 
 
 class Url(Base):
-    __tablename__ = 'url'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    url = Column(String(200))
-    title = Column(String(200))
-    description = Column(String(200))
-    create_time = Column('timestamp', TIMESTAMP, nullable=False, default=datetime.now())
+    __tablename__ = "url"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    url: Mapped[str] = mapped_column(String(200))
+    title: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str] = mapped_column(String(200))
+    # Column('timestamp', TIMESTAMP(timezone=False), nullable=False, default=datetime.now())
+    create_time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP, default=datetime.datetime.now())
+
+    def __repr__(self) -> str:
+        return f"Url(id={self.id!r}, title={self.title!r}, createTime={self.create_time}, url={self.url!r})"
 
 
-class MysqlDriver:
-
+class Driver:
     def __init__(self):
         config = configparser.ConfigParser()
         # 从配置文件读取数据库相关设置
@@ -33,24 +43,15 @@ class MysqlDriver:
                                                     config.get("mysql", "dbname")))
         print(self.engine.url)
 
-    def test_insert(self):
-        data_tars = pd.DataFrame({
-            'id': [2],
-            'url': ['https://tars-knock.cn'],
-            'title': ['Tars blog'],
-            'description': ['Tars赛博小窝']})
-        data_tars.to_sql('url', self.engine, index=False)
-
     def test_select(self):
-        DBSession = sessionmaker(self.engine)
-        session = DBSession()
-        # Base.to_dict = to_dict
-        rows = session.query(Url).all()
-        print([row.to_dict() for row in rows])
-        session.close()
+        session = Session(self.engine)
+        # urls = select(Url).where(Url.id.__eq__(1))
+        urls = select(Url)
+        # for url in session.scalar(urls):
+        #     print(url)
+        print(session.scalar(urls))
 
 
 if __name__ == '__main__':
-    connection = MysqlDriver()
-    connection.test_select()
-    # connection.test_insert()
+    driver = Driver()
+    driver.test_select()
