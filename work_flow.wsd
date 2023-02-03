@@ -1,0 +1,29 @@
+@startuml
+'!theme spacelab
+
+state spider <<fork>>
+
+[*] -> current_website
+current_website -> spider : callback function parse the html
+
+spider -> next_target_website
+next_target_website -> current_website: become a loop
+current_website: html
+next_target_website: target_url != current_url
+next_target_website: ensure the spider will go ahead
+
+state MysqlPipeline{
+    spider -> origin_item
+    origin_item -> mysql: persistence
+
+    origin_item: current url&title&description
+
+}
+
+mysql -> [*]
+
+
+
+
+
+@enduml
