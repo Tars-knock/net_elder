@@ -12,4 +12,4 @@ class NetElderItem(scrapy.Item):
     locate_url = scrapy.Field()
     title = scrapy.Field()
     description = scrapy.Field()
-    referer = scrapy.Field()
+    # referer = scrapy.Field()
