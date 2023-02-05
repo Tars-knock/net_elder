@@ -1,5 +1,6 @@
 import configparser
 import datetime
+import logging
 
 from sqlalchemy import String, create_engine, select
 from sqlalchemy import TIMESTAMP
@@ -7,9 +8,12 @@ from sqlalchemy.orm import DeclarativeBase, Session
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+logger = logging.getLogger('driver_logger')
+
 
 # 数据库链接类，处理对MySQL的增删改查
 class Driver:
+
     def __init__(self):
         config = configparser.ConfigParser()
         # 从配置文件读取数据库相关设置
@@ -22,7 +26,7 @@ class Driver:
             "mysql+pymysql://{}:{}@{}:{}/{}".format(config.get("mysql", "name"), config.get("mysql", "passwd"),
                                                     config.get("mysql", "host"), config.get("mysql", "port"),
                                                     config.get("mysql", "dbname")))
-        print(f'connecting {self.engine.url}')
+        logger.warning(f'connecting {self.engine.url}')
 
     def insert_url(self, url):
         with Session(self.engine) as session:
