@@ -14,9 +14,9 @@ class NetElderCore(scrapy.Spider):
         # 起点url选择导航站之类 外链比较多的网站
         origin_url = [
             'https://hao.qq.com/',
-            'https://hao123-hao123.com/',
-            'https://www.foreverblog.cn/blogs.html?year=2020',
-            'https://tars-knock.cn'
+            # 'https://hao123-hao123.com/',
+            # 'https://www.foreverblog.cn/blogs.html?year=2020',
+            # 'https://tars-knock.cn'
         ]
 
         for url in origin_url:
@@ -24,22 +24,25 @@ class NetElderCore(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         current_url = response.url
-        urls = response.css('a.attr(href)').getall()
+        urls = response.css('a::attr(href)').getall()
         for target_url in urls:
+            if not target_url.startwith('http'):
+                continue
+            # logger.info(f'target url:{target_url}')
             a1 = target_url.split('/')[2].split('.')
             a2 = current_url.split('/')[2].split('.')
             # 识别外链并访问
-            if a1[-1] == a2[-1] & a1[-2] == a2[-1]:
+            if a1[-1] == a2[-1] and a1[-2] == a2[-1]:
                 logger.info(f'next request: {target_url}')
-                yield response.follow(target_url, self.parse)
+                yield scrapy.Request(target_url, self.parse)
 
             title = response.css('title::text').getall()[0]
-            description = None
-            metas = response.css('meta')
-            for meta in metas:
-                if meta.attrib['name'] == 'description':
-                    description = meta.attrib['content']
-
+            # description = None
+            # metas = response.css('meta')
+            # for meta in metas:
+            #     if meta.attrib['name'] == 'description':
+            #         description = meta.attrib['content']
+            description = response.xpath("//meta[@name='description']/@content").get()
             logger.info(f'an item to pipeline url:{target_url}')
             yield NetElderItem(
                 locate_url=current_url,
