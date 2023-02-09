@@ -26,7 +26,7 @@ class NetElderCore(scrapy.Spider):
         current_url = response.url
         urls = response.css('a::attr(href)').getall()
         for target_url in urls:
-            if not target_url.startwith('http'):
+            if not target_url.startswith('http'):
                 continue
             # logger.info(f'target url:{target_url}')
             a1 = target_url.split('/')[2].split('.')
@@ -43,9 +43,15 @@ class NetElderCore(scrapy.Spider):
             #     if meta.attrib['name'] == 'description':
             #         description = meta.attrib['content']
             description = response.xpath("//meta[@name='description']/@content").get()
-            logger.info(f'an item to pipeline url:{target_url}')
-            yield NetElderItem(
-                locate_url=current_url,
-                title=title,
-                description=description
-            )
+            logger.info(f'an item to pipeline url:{target_url} title:{title} description:{description}')
+            item = NetElderItem()
+            item['title'] = title
+            item['locate_url'] = current_url
+            item['description'] = description
+            # yield item
+
+            # yield NetElderItem(
+            #     locate_url=current_url,
+            #     title=title,
+            #     description=description
+            # )

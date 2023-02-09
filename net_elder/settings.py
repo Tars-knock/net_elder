@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = 'net_elder.spiders'
 #USER_AGENT = 'net_elder (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 FEED_EXPORT_ENCODING = 'utf-8'
 

@@ -22,6 +22,7 @@ def url_convert(item: NetElderItem):
         title=item.get('title'),
         description=item.get('description')
     )
+    return res
 
 
 class MysqlPipeline:
