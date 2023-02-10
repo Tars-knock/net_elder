@@ -89,4 +89,4 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-LOG_FILE = '/var/log/net_elder/net.log'
+# LOG_FILE = '/var/log/net_elder/net.log'
