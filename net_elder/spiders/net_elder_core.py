@@ -14,9 +14,9 @@ class NetElderCore(scrapy.Spider):
         # 起点url选择导航站之类 外链比较多的网站
         origin_url = [
             'https://hao.qq.com/',
-            # 'https://hao123-hao123.com/',
-            # 'https://www.foreverblog.cn/blogs.html?year=2020',
-            # 'https://tars-knock.cn'
+            'https://hao123-hao123.com/',
+            'https://www.foreverblog.cn/blogs.html?year=2020',
+            'https://tars-knock.cn'
         ]
 
         for url in origin_url:
