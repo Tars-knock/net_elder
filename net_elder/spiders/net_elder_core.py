@@ -28,30 +28,26 @@ class NetElderCore(scrapy.Spider):
         for target_url in urls:
             if not target_url.startswith('http'):
                 continue
-            # logger.info(f'target url:{target_url}')
+            # logger.info(f' target url:{target_url}')
             a1 = target_url.split('/')[2].split('.')
             a2 = current_url.split('/')[2].split('.')
             # 识别外链并访问
-            if a1[-1] == a2[-1] and a1[-2] == a2[-1]:
+            if a1[-1] != a2[-1] or a1[-2] != a2[-2]:
                 logger.info(f'next request: {target_url}')
                 yield scrapy.Request(target_url, self.parse)
 
-            title = response.css('title::text').getall()[0]
-            # description = None
-            # metas = response.css('meta')
-            # for meta in metas:
-            #     if meta.attrib['name'] == 'description':
-            #         description = meta.attrib['content']
-            description = response.xpath("//meta[@name='description']/@content").get()
-            logger.info(f'an item to pipeline url:{target_url} title:{title} description:{description}')
-            item = NetElderItem()
-            item['title'] = title
-            item['locate_url'] = current_url
-            item['description'] = description
-            # yield item
+        # 提取当前网页信息
+        title = response.css('title::text').getall()[0]
+        description = response.xpath("//meta[@name='description']/@content").get()
+        # logger.info(f' an item to pipeline url:{current_url} title:{title} description:{description}')
+        item = NetElderItem()
+        item['title'] = title
+        item['locate_url'] = current_url
+        item['description'] = description
+        yield item
 
-            # yield NetElderItem(
-            #     locate_url=current_url,
-            #     title=title,
-            #     description=description
-            # )
+        # yield NetElderItem(
+        #     locate_url=current_url,
+        #     title=title,
+        #     description=description
+        # )
