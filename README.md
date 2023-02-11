@@ -12,5 +12,8 @@
 	b. 一个类似步骤一中的指定回调的request；scrapy会继续发送这个request并交由回调处理 （net_elder 实现互联网上遛弯的核心，~~DFS遍整个互联网~~）
 3. 在回调函数中使用scrapy提供的CSS选择器将目标数据提取出来并组合成item；在这个项目中只需要提取标签a相关的信息即可
 4. 最后通过ItemPipLine将item信息持久化进数据库即可
+
+
 ![file](https://tars-knock.cn/wp-content/uploads/2023/01/image-1675433819525.png)
+
 更多相关信息可[点击跳转到我的博客](https://tars-knock.cn/archives/263)了解~
